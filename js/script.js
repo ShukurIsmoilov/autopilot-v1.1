@@ -14,23 +14,22 @@ const runButton = document.querySelector(".btn-run");
 let carLocation = 0;
 let inputNumber = 0;
 
-
 function move(coeff, steps) {
     squaresArray[carLocation].classList.remove("car");
     carLocation += coeff * steps;
     squaresArray[carLocation].classList.add("car");
 }
 
-function wayIsClear(coeff, steps) {
-    if (steps * coeff + carLocation > 15 || steps * coeff + carLocation < 0) {
+function wayIsClear(coeff, steps, carLocation) {
+    const moveStep = steps * coeff + carLocation;
+    if (moveStep > 15 || moveStep < 0) {
         return false;
-    }
-    if (Math.abs(coeff) === 1 && Math.floor(carLocation / 4) !== (Math.floor((carLocation + steps) / 4))) {
+    } // forward and backwards
+    if (Math.abs(coeff) === 1 && Math.floor(carLocation / 4) !== (Math.floor(moveStep / 4))) {
         return false;
-    }
+    } // right and left
     return true;
 }
-
 
 function readCommand() {
     inputsArray[inputNumber].value = inputsArray[inputNumber].value.trim();
@@ -65,23 +64,23 @@ function readCommand() {
                         coeff = -1;
                         break;
                 }
-                if (wayIsClear(coeff, steps)) {
+                if (wayIsClear(coeff, steps, carLocation)) {
                     move(coeff, steps);
                     inputsArray[inputNumber].disabled = true;
                     inputsArray[inputNumber].classList.remove("wrong-command");
                     inputsArray[inputNumber].classList.add("correct-command");
                     inputNumber++;
+					if (carLocation === 15) {
+                        runButton.disabled = true;
+                        runButton.innerText = "🎉Congrats, you did it!🎉";
+                        alert("🎉🏁🎌Hooorray!🎉🏁🎌");						
+                    }
                     if (inputNumber === 8 && carLocation !== 15) {
                         alert("Ooooopps, you ran out of lines, give it another try ;)");
                         location.reload();
                     }
                     inputsArray[inputNumber].removeAttribute("disabled");
-                    if (carLocation === 15) {
-                        inputsArray[inputNumber].value = "🎉🏁🎌Hooorray!🎉🏁🎌"
-                        inputsArray[inputNumber].disabled = true;
-                        runButton.disabled = true;
-                        runButton.innerText = "🎉Congrats, you did it!🎉"
-                    }
+
                 } else {
                     inputsArray[inputNumber].classList.remove("wrong-command");
                     alert("Error, car can not take that step! Try another direction.");
