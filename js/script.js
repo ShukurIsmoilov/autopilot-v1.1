@@ -1,96 +1,96 @@
-//Selectingarray of squares
-const divsNodeList = document.querySelectorAll("div");
-const divsArray = Array.prototype.slice.call(divsNodeList);
-const squaresArray = divsArray.slice(2, 18);
-
-//Selecting array of inputs
-const inputsNodeList = document.querySelectorAll("input");
-const inputsArray = Array.prototype.slice.call(inputsNodeList);
-
-//Selecting run button
-const runButton = document.querySelector(".btn-run");
-
-//  indexes
 let carLocation = 0;
-let inputNumber = 0;
+const reCommands = /car\.(forward|backwards|right|left)\((|[0-9])\);/;
+const squaresArray = document.querySelector('#map').querySelectorAll('div');
+const codeLine = document.querySelector('#codeLine');
+const runButton = document.querySelector('#run-btn');
 
-function move(coeff, steps) {
-    squaresArray[carLocation].classList.remove("car");
-    carLocation += coeff * steps;
-    squaresArray[carLocation].classList.add("car");
-}
+codeLine.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') {
+        readCommand();
+    }
+});
 
-function wayIsClear(coeff, steps, carLocation) {
+document.addEventListener('keydown', (e) => {
+    let coeff = 0;
+    switch (e.key) {
+        case 'ArrowUp':
+            coeff = 4;
+            codeLine.value = 'car.forward();';
+            break;
+        case 'ArrowDown':
+            coeff = -4;
+            codeLine.value = 'car.backwards();';
+            break;
+        case 'ArrowLeft':
+            coeff = -1;
+            codeLine.value = 'car.left();';
+            break;
+        case 'ArrowRight':
+            coeff = 1;
+            codeLine.value = 'car.right();';
+            break;
+        default:
+            break;
+    }
+    checkWayAndMove(coeff);
+});
+
+const checkWayAndMove = (coeff, steps = 1) => {
     const moveStep = steps * coeff + carLocation;
-    if (moveStep > 15 || moveStep < 0) {
-        return false;
-    } // forward and backwards
-    if (Math.abs(coeff) === 1 && Math.floor(carLocation / 4) !== (Math.floor(moveStep / 4))) {
-        return false;
-    } // right and left
-    return true;
+    if (!(moveStep > 15 ||
+        moveStep < 0 ||
+        Math.abs(coeff) === 1 &&
+        Math.floor(carLocation / 4) !== Math.floor(moveStep / 4))
+    ) {
+        codeLine.classList.remove('wrong-command');
+        squaresArray[carLocation].classList.remove('car');
+        carLocation += coeff * steps;
+        squaresArray[carLocation].classList.add('car');
+
+        if (carLocation === 15) {
+            alert('🎉🏁🎌Hooorray!🎉🏁🎌');
+            location.reload();
+        }
+    }
 }
 
-function readCommand() {
-    inputsArray[inputNumber].value = inputsArray[inputNumber].value.trim();
-    const command = inputsArray[inputNumber].value;
-    const reCommands = /car\.(forward|backwards|right|left)\((|[0-9])\);/;
+const readCommand = () => {
+    const command = codeLine.value.trim();
     const found = command.match(reCommands);
 
     if (found !== null && found[0] === found.input) {
         const arrayOfChars = found.input.split('',);
         const direction = found[1];
-        let steps = Number(arrayOfChars[arrayOfChars.length - 3]);
+        let steps = +arrayOfChars[arrayOfChars.length - 3];
         if (steps !== 0) {
             if (isNaN(steps)) {
                 steps = 1;
             }
             if (steps > 3) {
-                inputsArray[inputNumber].classList.remove("wrong-command");
-                alert("Error, Out of range move. Too big step!");
+                codeLine.classList.remove('wrong-command');
+                alert('Error, Out of range move. Too big step!');
             } else {
                 let coeff = 0;
                 switch (direction) {
-                    case "forward":
+                    case 'forward':
                         coeff = 4;
                         break;
-                    case "backwards":
+                    case 'backwards':
                         coeff = (-4);
                         break;
-                    case "right":
+                    case 'right':
                         coeff = 1;
                         break;
                     default:
                         coeff = -1;
                         break;
                 }
-                if (wayIsClear(coeff, steps, carLocation)) {
-                    move(coeff, steps);
-                    inputsArray[inputNumber].disabled = true;
-                    inputsArray[inputNumber].classList.remove("wrong-command");
-                    inputsArray[inputNumber].classList.add("correct-command");
-                    inputNumber++;
-					if (carLocation === 15) {
-                        runButton.disabled = true;
-                        runButton.innerText = "🎉Congrats, you did it!🎉";
-                        alert("🎉🏁🎌Hooorray!🎉🏁🎌");						
-                    }
-                    if (inputNumber === 8 && carLocation !== 15) {
-                        alert("Ooooopps, you ran out of lines, give it another try ;)");
-                        location.reload();
-                    }
-                    inputsArray[inputNumber].removeAttribute("disabled");
-
-                } else {
-                    inputsArray[inputNumber].classList.remove("wrong-command");
-                    alert("Error, car can not take that step! Try another direction.");
-                }
+                checkWayAndMove(coeff, steps);
             }
         }
-    } else if (command !== "") {
-        inputsArray[inputNumber].classList.add("wrong-command");
-        alert("Input error!");
-        console.log("Input error!");
+    } else if (command !== '') {
+        codeLine.classList.add('wrong-command');
+        alert('Syntax error!');
     }
 }
 

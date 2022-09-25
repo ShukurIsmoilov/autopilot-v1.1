@@ -14,9 +14,9 @@
 </head>
 
 <body>
-    <h1>🎌AUTOPILOT v1.1🎌</h1>
     <div class="container">
-        <div class="map">
+        <h2>🎌AUTOPILOT v1.1🎌</h2>
+        <div id="map" class="map">
             <div class="div1 car start">START</div>
             <div class="div2"></div>
             <div class="div3"></div>
@@ -34,37 +34,37 @@
             <div class="div15"></div>
             <div class="div16 finish">FINISH</div>
         </div>
-        <div class="editor">
-            <ol class="command-list">
-                <li><input class="l1" type="text" value="car.right();"></li>
-                <li><input class="l2" type="text" disabled></li>
-                <li><input class="l3" type="text" disabled></li>
-                <li><input class="l4" type="text" disabled></li>
-                <li><input class="l5" type="text" disabled></li>
-                <li><input class="l6" type="text" disabled></li>
-                <li><input class="l7" type="text" disabled></li>
-                <li><input class="l8" type="text" disabled></li>
-            </ol>
-            <button class="btn-run">RUN THE LINE</button>
+        <div>
+            <input id="codeLine" type="text" value="car.forward();" placeholder="type command">
+            <br>
+            <button id="run-btn" class="run-btn">RUN THE LINE</button>
         </div>
+        <p class="info">
+            👋 Hello there,😻 this "Autopilot" program,
+            but a bit modified (with support of arguments).
+            It's easy to code on 📝, but we have
+            to practice in 🖥️. Give it a try and have fun 🎉,
+            after that by using provided commands
+            <strong>get the car from 🎌 to 🏁</strong>.
+            <i>Do not forget semicolon(;) in the end of commands.</i>
+            It has only 4 commands. Input field has example of code,
+            try to run it. List of commands are listed below ⬇️
+        </p>
+        <ul>
+            <li>car.forward(arg);</li>
+            <li>car.backwards(arg);</li>
+            <li>car.right(arg);</li>
+            <li>car.left(arg);</li>
+        </ul>
+        <footer>
+            Made with ❤️ by
+            <a href="https://github.com/Shukurdzhon/autopilot">
+                Shukur Ismoilov
+            </a>
+        </footer>
     </div>
-    <p class="info">
-        👋 Hello there,😻 this is our first program, but a bit modified 
-        (with support of arguments). We have already did it on paper as 
-        well 📝, now time to practice 🖥️. Give it a try and have fun 🎉, 
-        after that by using provided commands <strong>get the car from 🎌 to 🏁</strong>.
-        <i>Note that, now we have obstacles on the way. Do not forget
-        semicolon(;) in the end of commands.</i> It has only 4 commands.
-        1st line has example of code, try to run it.
-    </p>
-    <ul class="moves">
-        <li class="forward">car.forward(arg);</li>
-        <li class="backwards">car.backwards(arg);</li>
-        <li class="right">car.right(arg);</li>
-        <li class="left">car.left(arg);</li>
-    </ul>
-    <footer>Made with ❤️ by <a href="https://shukurdzhon.github.io/autopilot-v1.1/">Shukur Ismoilov</a></footer>
+
+    <script src="./js/script.js"></script>
 </body>
 
-<script src="./js/script.js"></script>
 </html>
